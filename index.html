@@ -18,15 +18,22 @@
         init: function(x, y, radius, color) {
           this.x = x;
           this.y = y;
-          this.radius = radius;
+          this.startingRadius = radius;
           this.color = color;
+          this.startTime = Date.now();
         },
 
         draw: function(canvas) {
           canvas.beginPath();
-          canvas.arc(this.x, this.y, this.radius, 0, 2*PI);
+          canvas.arc(this.x, this.y, this.radius(), 0, 2*PI);
           canvas.fillStyle = this.color;
           canvas.fill();
+        },
+
+        radius: function() {
+          var timePassed = Date.now() - this.startTime;
+
+          return Math.max(0, this.startingRadius - (timePassed * 0.09));
         }
       }
 
