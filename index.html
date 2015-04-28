@@ -31,22 +31,32 @@
       }
 
       Sketch.create({
-        RADIUS: 40,
+        MAX_RADIUS: 120,
         MAX_CIRCLES: 100,
+        CIRCLE_SIZE_RATE: 1.3,
 
         setup: function() {
           this.backgroundColor = 'rgb(10, 57, 108)';
           this.circles = [];
+          this.pMouseX = 0;
+          this.pMouseY = 0;
         },
 
         mousemove: function() {
-          var c = new Circle();
-          c.init(this.mouse.x, this.mouse.y, this.RADIUS, this.randomColor());
+          var radius = Math.min(1 + this.mouseDistance() * this.CIRCLE_SIZE_RATE, this.MAX_RADIUS);
+
+          // add a new circle
+          var c = new Circle(this.mouse.x, this.mouse.y, radius, this.randomColor());
           this.circles.push(c);
 
           if (this.circles.length > this.MAX_CIRCLES) {
             this.circles.shift();
           }
+        },
+
+        // distance since last frame
+        mouseDistance: function() {
+          return Math.sqrt(Math.pow(this.mouse.x - this.pMouseX, 2) + Math.pow(this.mouse.y - this.pMouseY, 2));
         },
 
         draw: function() {
@@ -59,6 +69,10 @@
           for (var i = 0; i < this.circles.length; i++) {
             this.circles[i].draw(this);
           }
+
+          // set previous mouse position
+          this.pMouseX = this.mouse.x;
+          this.pMouseY = this.mouse.y;
         },
 
         randomColor: function() {
