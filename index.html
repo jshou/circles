@@ -1,0 +1,74 @@
+<html>
+  <body>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sketch.js/1.0.0/sketch.js"></script>
+    <script>
+      var Circle = function(x, y, radius, color) {
+        this.init(x, y, radius, color);
+      }
+
+      Circle.prototype = {
+        init: function(x, y, radius, color) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.color = color;
+        },
+
+        draw: function(canvas) {
+          canvas.beginPath();
+          canvas.arc(this.x, this.y, this.radius, 0, 2*PI);
+          canvas.fillStyle = this.color;
+          canvas.fill();
+        }
+      }
+
+      Sketch.create({
+        RADIUS: 40,
+        MAX_CIRCLES: 100,
+
+        setup: function() {
+          this.backgroundColor = 'rgb(10, 57, 108)';
+          this.circles = [];
+        },
+
+        mousemove: function() {
+          var c = new Circle();
+          c.init(this.mouse.x, this.mouse.y, this.RADIUS, this.randomColor());
+          this.circles.push(c);
+
+          if (this.circles.length > this.MAX_CIRCLES) {
+            this.circles.shift();
+          }
+        },
+
+        draw: function() {
+          // draw bg
+          this.beginPath();
+          this.fillStyle = this.backgroundColor;
+          this.fillRect(0, 0, this.width, this.height);
+
+          // draw circles
+          for (var i = 0; i < this.circles.length; i++) {
+            this.circles[i].draw(this);
+          }
+        },
+
+        randomColor: function() {
+          var r = 255 * (this.mouse.x / this.width);
+          var g = 255 * (this.mouse.y / this.height);
+          var b = 255 * abs(cos(PI * this.mouse.y / this.width));
+
+          return 'rgb(' + ~~r + ',' + ~~g + ',' + ~~b + ')';
+        }
+      });
+    </script>
+  </body>
+</html>
