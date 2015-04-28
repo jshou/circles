@@ -43,12 +43,14 @@
         },
 
         mousemove: function() {
+          // faster mouse -> bigger circle
           var radius = Math.min(1 + this.mouseDistance() * this.CIRCLE_SIZE_RATE, this.MAX_RADIUS);
 
           // add a new circle
           var c = new Circle(this.mouse.x, this.mouse.y, radius, this.randomColor());
           this.circles.push(c);
 
+          // don't have too many circles
           if (this.circles.length > this.MAX_CIRCLES) {
             this.circles.shift();
           }
